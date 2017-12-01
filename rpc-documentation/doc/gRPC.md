@@ -32,3 +32,6 @@ server端通过侦听指定 **port**，等待Client链接请求，使用Netty构
 4. BossGroup中的线程用于accept客户端链接，并转发（轮循）给workerGroup中的线程
 5. workerGroup中的特定线程用于初始化客户端链接，初始化pipeline和handler，并将其注册到worker线程的selector上（每个worker线程持有一个selector，不共享）
 6. selector上发生读写事件后，获取事件所属的链接句柄，然后执行handler（inbound），同时进行拆封package，handler执行完毕后，数据写入通过，由outbound handler处理（封包）通过链接发出。(每个worker线程上的数据请求是队列化的)
+
+### stub对象
+用于交互的存根对象
