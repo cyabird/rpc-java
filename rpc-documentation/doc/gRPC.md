@@ -14,7 +14,7 @@
 **Protocol Buffer** 
 - 特点:
   - 紧凑的二进制数据消息,更小的传输体积
-    - **Varint**(有符号)和**Zigzag**(无符号)方式表示数值
+    - **Varint**(有符号)和**Zigzag**(无符号)方式表示数值 
     - **Message Buffer** 方式表示field
   - 快速封解包
   
