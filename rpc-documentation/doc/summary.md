@@ -17,6 +17,8 @@ kryo > protobuf
 - http/2
 - hessian
 - thrift
+- mina
+- grizzly
 
 ### 服务注册相关
 - **muticast** 注册中心
