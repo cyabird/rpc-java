@@ -1,3 +1,4 @@
+## 基本结构
 | 角色                | 描述                             | 
 |--------------------|----------------------------------|
 |注册中心(Registry)   |服务注册与发现的注册中心            |
@@ -15,8 +16,6 @@
 |路由     |根据自定义规则配置调用节点       |
 |服务降级 |临时屏蔽某个出错的非关键服务     |
 |并发控制 |对并发情况进行控制              |
-
-## 基本结构
 
 ![](image/dubbo-architecture1.png)
 
@@ -46,33 +45,33 @@
 提供集群部署策略
 
 ### 集群模式
-> - Failover Cluster模式:
-> 调用失败时，自动切换，重新尝试调用其他节点上可用的服务。
+- Failover Cluster模式:
+调用失败时，自动切换，重新尝试调用其他节点上可用的服务。
 
-> - Failfast Cluster模式:
-> 快速失败模式，调用只执行一次，失败则立即报错。
+- Failfast Cluster模式:
+快速失败模式，调用只执行一次，失败则立即报错。
 
-> - Failsafe Cluster模式:
-> 失败安全模式，调用失败,则直接忽略失败的调用，记录失败的调用到日志文件.
+- Failsafe Cluster模式:
+失败安全模式，调用失败,则直接忽略失败的调用，记录失败的调用到日志文件.
 
-> - Failback Cluster模式:
-> 失败自动恢复，后台记录失败请求，定时重发。
+- Failback Cluster模式:
+失败自动恢复，后台记录失败请求，定时重发。
 
-> - Forking Cluster模式:
-> 并行调用多个服务器，只要一个成功即返回。
+- Forking Cluster模式:
+并行调用多个服务器，只要一个成功即返回。
 
-> - Broadcast Cluster模式:
-> 广播调用所有提供者，逐个调用，任意一台报错则报错。
+- Broadcast Cluster模式:
+广播调用所有提供者，逐个调用，任意一台报错则报错。
 
 ### 负载均衡策略
 > - Random LoadBalance
 > 通过权重随机分配，配置值为random。
 
-> - RoundRobin LoadBalance 
-> 轮询策略
+- RoundRobin LoadBalance 
+轮询策略
 
-> - LeastActive LoadBalance
-> 据请求调用的次数计数，处理请求更慢的节点会受到更少的请求。
+- LeastActive LoadBalance
+据请求调用的次数计数，处理请求更慢的节点会受到更少的请求。
 
-> - ConsistentHash LoadBalance
-> 一致性Hash策略。相同调用参数的请求会发送到同一个服务提供方节点上，如果某个节点发生故障，则会基于一致性Hash算法映射到虚拟节点上。
+- ConsistentHash LoadBalance
+一致性Hash策略。相同调用参数的请求会发送到同一个服务提供方节点上，如果某个节点发生故障，则会基于一致性Hash算法映射到虚拟节点上。
