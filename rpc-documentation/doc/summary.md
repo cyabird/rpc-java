@@ -6,17 +6,14 @@
 ## 技术
 
 ### 序列化相关
-
 - **protobuf**
 - **kryo**
 - hessian2
 
 #### 性能
-
 kryo > protobuf
 
 ### 通讯相关
-
 - **netty**
 - **epoll**
 - p2p
@@ -27,7 +24,6 @@ kryo > protobuf
 - grizzly
 
 ### 服务注册相关
-
 - muticast 注册中心
 - **Consul** 注册中心
 - **zookeeper** 注册中心
