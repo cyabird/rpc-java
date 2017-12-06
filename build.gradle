@@ -74,12 +74,4 @@ configure(rootProject) {
     apply plugin: "groovy"
 
     configurations.archives.artifacts.clear()
-
-    repositories {
-        mavenLocal()
-    }
-
-    dependencies {
-        Compile(":rpc-demo")
-    }
 }
