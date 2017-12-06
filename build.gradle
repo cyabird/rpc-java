@@ -1,12 +1,85 @@
-group 'org.cyabird'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {}
 }
 
-testCompile("junit:junit:4.12") {
-    exclude group:'org.hamcrest', module:'hamcrest-core'
+plugins {
+    id "java"
+    id "com.gradle.build-scan" version "1.11"
+}
+
+// 审视扫描
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+}
+
+ext {
+    moduleProjects = subprojects.findAll {
+        !it.name.equals('rpc-documentation')
+    }
+}
+
+// 所有项目配置
+configure(allprojects) { project ->
+    group = "org.cyabird"
+    version = '1.0-SNAPSHOT'
+
+    apply plugin: "java"
+
+    configurations.all {
+        // 检查更新时间
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+}
+
+configure(subprojects) { subproject ->
+    // 属性配置
+    ext {
+        junitVersion = "4.12"
+        mockitoVersion = "2.12.0"
+    }
+
+    [compileJava, compileTestJava].each() {
+        it.options.encoding = 'UTF-8'
+        it.sourceCompatibility = 1.8
+        it.targetCompatibility = 1.8
+    }
+
+    compileTestJava {
+        options.compilerArgs += "-parameters"
+    }
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        testCompile("junit:junit:${junitVersion}") {
+            exclude group: 'org.hamcrest', module: 'hamcrest-core'
+        }
+        testCompile("org.mockito:mockito-core:${mockitoVersion}") {
+            exclude group: 'org.hamcrest', module: 'hamcrest-core'
+        }
+    }
+}
+
+configure(rootProject) {
+    description = "rpc-project"
+
+    apply plugin: "groovy"
+
+    configurations.archives.artifacts.clear()
+
+    repositories {
+        mavenLocal()
+    }
+
+    dependencies {
+        Compile(":rpc-demo")
+    }
 }

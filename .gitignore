@@ -1,6 +1,7 @@
-# 特定目录
+# Compile the file
 target/
 classes/
+build/
 
 # Eclipse artifacts, including WTP generated manifests
 .classpath
