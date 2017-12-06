@@ -7,7 +7,7 @@
 |监控(Monitor)       |统计服务的调用次调和调用时间的监控中心|
 |容器(Container)      |服务运行时容器                     |
 
-![](image/dubbo-architecture.png)
+![](../../image/dubbo-architecture.png)
 
 |功能                 | 描述                          | 
 |--------|-------------------------------|
@@ -17,7 +17,7 @@
 |服务降级 |临时屏蔽某个出错的非关键服务     |
 |并发控制 |对并发情况进行控制              |
 
-![](image/dubbo-architecture1.png)
+![](../../image/dubbo-architecture1.png)
 
 ## 流程
 1. 服务提供方发布服务到服务注册中心；

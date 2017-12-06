@@ -4,7 +4,7 @@
 |服务提供方(RPC Server) |暴露服务的服务提供方                |
 |服务消费方(RPC Client) |调用远程服务的服务消费方            |
 
-![](image/motan-architecture.jpg)
+![](../../image/motan-architecture.jpg)
 
 |功能列表   | 描述                |
 |----------|---------------------|
@@ -15,7 +15,7 @@
 
 ## 架构分层
 
-![](image/motan-layer.png)
+![](../../image/motan-layer.png)
 
 公共组件：
 - SPI：Service Provider Interface，通过ExtensionLoader提供扩展点功能，动态装载接口具体实现，提供客户端扩展能力。
@@ -32,9 +32,9 @@
 
 ## 模块
 
-![](image/motan-model.jpg)
+![](../../image/motan-model.jpg)
 
-![](image/motan-model1.png)
+![](../../image/motan-model1.png)
 
 ### 公用相关模块
 
@@ -80,11 +80,11 @@ referer模块包含服务消费方对服务的引用
 
 ### 客户端流程
 
-![](image/motan-client.jpg)
+![](../../image/motan-client.jpg)
 
 ### 服务端流程
 
-![](image/motan-server.jpg)
+![](../../image/motan-server.jpg)
 
 ## 相关技术
 
