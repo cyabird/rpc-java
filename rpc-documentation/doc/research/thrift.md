@@ -17,7 +17,7 @@ Thrift 可以让用户选择客户端与服务端之间传输通信协议的类�
 常用协议有以下几种：
 - TBinaryProtocol —— 二进制编码格式进行数据传输
 创建服务器端实现代码
-```Java
+```java
 package service.server; 
 import org.apache.thrift.TProcessor; 
 import org.apache.thrift.protocol.TBinaryProtocol; 

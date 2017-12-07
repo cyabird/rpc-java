@@ -1,11 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-    dependencies {}
-}
-
 plugins {
     id "java"
     id "com.gradle.build-scan" version "1.11"
@@ -30,13 +22,19 @@ configure(allprojects) { project ->
 
     apply plugin: "java"
 
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
     configurations.all {
         // 检查更新时间
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
     }
 }
 
-configure(subprojects) { subproject ->
+// 模块项目
+configure(moduleProjects) { subproject ->
     // 属性配置
     ext {
         junitVersion = "4.12"
@@ -51,11 +49,6 @@ configure(subprojects) { subproject ->
 
     compileTestJava {
         options.compilerArgs += "-parameters"
-    }
-
-    repositories {
-        mavenCentral()
-        mavenLocal()
     }
 
     dependencies {
@@ -74,4 +67,8 @@ configure(rootProject) {
     apply plugin: "groovy"
 
     configurations.archives.artifacts.clear()
+
+    dependencies{
+        compile(project(":rpc-registry"))
+    }
 }

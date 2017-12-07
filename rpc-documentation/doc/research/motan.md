@@ -92,7 +92,7 @@ referer模块包含服务消费方对服务的引用
 - hessian2
 
 ### 通讯协议
-- Netty 作为 Endpoint 以及
+- Netty 作为 Endpoint
 - 自定义的协议编码方式
 
 ### 配置方式
