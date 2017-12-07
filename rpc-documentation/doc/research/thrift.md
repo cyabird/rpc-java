@@ -1,4 +1,4 @@
-##thrift架构
+## thrift架构
 
 ![](../../image/thrift-framework.jpg)
 
@@ -9,7 +9,7 @@
 
 Thrift服务器包含用于绑定协议和传输层的基础架构，它提供阻塞、非阻塞、单线程和多线程的模式运行在服务器上，可以配合服务器 / 容器一起运行，可以和现有的 J2EE 服务器 /Web 容器无缝的结合。
 
-##协议
+## 协议
 
 Thrift 可以让用户选择客户端与服务端之间传输通信协议的类别，
 在传输协议上总体划分为文本 (text) 和二进制 (binary) 传输协议，为节约带宽，提高传输效率，一般情况下使用二进制类型的传输协议为多数，有时还会使用基于文本类型的协议，这需要根据项目/产品中的实际需求。
@@ -101,7 +101,7 @@ TJSONProtocol protocol = new TJSONProtocol(transport);
 ```
 - TSimpleJSONProtocol —— 只提供 JSON 只写的协议，适用于通过脚本语言解析
 
-##传输层
+## 传输层
 常用的传输层有以下几种：
 
 - TSocket —— 使用阻塞式 I/O 进行传输，是最常见的模式
@@ -110,6 +110,8 @@ TJSONProtocol protocol = new TJSONProtocol(transport);
 - TFramedTransport —— 使用非阻塞方式，按块的大小进行传输，类似于 Java 中的 NIO
 若使用 TFramedTransport 传输层，其服务器必须修改为非阻塞的服务类型，客户端只需替上面客代码中 TTransport 部分，代码如下
 TNonblockingServerTransport 类是构建非阻塞 socket 的抽象类，TNonblockingServerSocket 类继承 TNonblockingServerTransport
+
+
 服务端
 ```
 TNonblockingServerTransport serverTransport; 
