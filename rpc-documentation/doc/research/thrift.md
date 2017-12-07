@@ -89,13 +89,13 @@ public class HelloServiceClient {
 ```
 - TCompactProtocol —— 高效率的、密集的二进制编码格式进行数据传输
 构建 TCompactProtocol 协议的服务器和客户端只需上面代码中 TBinaryProtocol 协议部分即可，替换成如下代码：
-```Java
+```
 TCompactProtocol.Factory proFactory = new TCompactProtocol.Factory();
 TCompactProtocol protocol = new TCompactProtocol(transport);
 ```
 - TJSONProtocol —— 使用 JSON 的数据编码协议进行数据传输
 构建 TJSONProtocol 协议的服务器和客户端只需替换上面代码中 TBinaryProtocol 协议部分即可，替换成如下代码：
-```Java
+```
 TJSONProtocol.Factory proFactory = new TJSONProtocol.Factory();
 TJSONProtocol protocol = new TJSONProtocol(transport);
 ```
@@ -111,7 +111,7 @@ TJSONProtocol protocol = new TJSONProtocol(transport);
 若使用 TFramedTransport 传输层，其服务器必须修改为非阻塞的服务类型，客户端只需替上面客代码中 TTransport 部分，代码如下
 TNonblockingServerTransport 类是构建非阻塞 socket 的抽象类，TNonblockingServerSocket 类继承 TNonblockingServerTransport
 服务端
-```Java
+```
 TNonblockingServerTransport serverTransport; 
 serverTransport = new TNonblockingServerSocket(10005); 
 Hello.Processor processor = new Hello.Processor(new HelloServiceImpl()); 
@@ -120,7 +120,7 @@ System.out.println("Start server on port 10005 ...");
 server.serve();
 ```
 客户端
-```Java
+```
 TTransport transport = new TFramedTransport(new TSocket("localhost", 10005));
 ```
 - TNonblockingTransport —— 使用非阻塞方式，用于构建异步客户端
@@ -128,7 +128,7 @@ TTransport transport = new TFramedTransport(new TSocket("localhost", 10005));
 ## 服务端类型
 常见的服务端类型有以下几种：
 - TSimpleServer —— 单线程服务器端使用标准的阻塞式 I/O
-```Java
+```
 TServerSocket serverTransport = new TServerSocket(7911); 
 TProcessor processor = new Hello.Processor(new HelloServiceImpl()); 
 TServer server = new TSimpleServer(processor, serverTransport); 
