@@ -1,21 +1,30 @@
 # 相关技术收集
 
-## 序列化
+## 通讯相关
+
+### 序列化协议
+
+#### 文本
+- JSON
+- XML
+
+#### 二进制
 - **protobuf**
 - **kryo**
 - FST
 - hessian2
 
-### 性能
-kryo > protobuf
+性能: kryo > protobuf
 
-## 通讯相关
+### IO处理
 - **netty**
 - **epoll**
+
+### 通信
 - p2p
 - http/2
-- hessian
 - thrift
+- hessian
 - mina
 - grizzly
 

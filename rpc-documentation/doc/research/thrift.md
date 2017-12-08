@@ -1,142 +1,67 @@
+| 特点              |
+|-------------------|
+|基于二进制的编解码  |
+|基于NIO的底层通信   |
+|使用IDL支持跨平台调用|
+
 ## thrift架构
 
 ![](../../image/thrift-framework.jpg)
 
-如图所示，图中黄色部分是用户实现的业务逻辑，
-褐色部分是根据Thrift定义的服务接口描述文件生成的客户端和服务器端代码框架，
+| 组件     |描述                           |
+|----------|-------------------------------|
+|TProtocol |协议和编解码组件                |
+|TTransport|传输组件                        |
+|TProcessor|服务调用组件                    |
+|TServer   |服务端组件                      |
+|TClient   |客户端组件                      |
+|IDL       |服务描述组件，负责生产跨平台客户端|
+
+黄色部分是用户实现的业务逻辑.
+
+褐色部分是根据Thrift定义的服务接口描述文件生成的客户端和服务器端代码框架.
+
 红色部分是根据Thrift文件生成代码实现数据的读写操作。
-红色部分以下是 Thrift 的传输体系、协议以及底层I/O通信，使用Thrift可以很方便的定义一个服务并且选择不同的传输协议和传输层而不用重新生成代码。
 
-Thrift服务器包含用于绑定协议和传输层的基础架构，它提供阻塞、非阻塞、单线程和多线程的模式运行在服务器上，可以配合服务器 / 容器一起运行，可以和现有的 J2EE 服务器 /Web 容器无缝的结合。
+红色部分以下是 Thrift 的传输体系、协议以及底层I/O通信，可以定义一个服务选择不同的传输协议和传输层而不用重新生成代码。
 
-## 协议
+> Thrift服务器包含用于绑定协议和传输层的基础架构，提供阻塞、非阻塞、单线程和多线程的模式运行在服务器上，可以配合服务器 / 容器一起运行，可以和现有的 J2EE 服务器 /Web 容器无缝的结合。
 
-Thrift 可以让用户选择客户端与服务端之间传输通信协议的类别，
-在传输协议上总体划分为文本 (text) 和二进制 (binary) 传输协议，为节约带宽，提高传输效率，一般情况下使用二进制类型的传输协议为多数，有时还会使用基于文本类型的协议，这需要根据项目/产品中的实际需求。
+### TProtocol
+1. 写消息头(writeMessageBegin)。Message里面定义方法名，调用的类型，版本号，消息seqId
+2. 写消息体,包含方法的参数。类(writeStructBegin)、字段(writeFieldBegin)、顺序号(从１开始)、集合(writeListBegin/writeMapBegin)，每个复杂的数据类型写完都会调用writeXXXEnd，直到writeMessageEnd结束。
+3. 读消息时根据数据类型读取相应的长度
 
-常用协议有以下几种：
-- TBinaryProtocol —— 二进制编码格式进行数据传输
-创建服务器端实现代码
-```java
-package service.server; 
-import org.apache.thrift.TProcessor; 
-import org.apache.thrift.protocol.TBinaryProtocol; 
-import org.apache.thrift.protocol.TBinaryProtocol.Factory; 
-import org.apache.thrift.server.TServer; 
-import org.apache.thrift.server.TThreadPoolServer; 
-import org.apache.thrift.transport.TServerSocket; 
-import org.apache.thrift.transport.TTransportException; 
-import service.demo.Hello; 
-import service.demo.HelloServiceImpl; 
- 
-public class HelloServiceServer { 
-   /** 
-    * 启动 Thrift 服务器
-    * @param args 
-    */ 
-   public static void main(String[] args) { 
-       try { 
-           // 设置服务端口为 7911 
-           TServerSocket serverTransport = new TServerSocket(7911); 
-           // 设置协议工厂为 TBinaryProtocol.Factory 
-           Factory proFactory = new TBinaryProtocol.Factory(); 
-           // 关联处理器与 Hello 服务的实现
-           TProcessor processor = new Hello.Processor(new HelloServiceImpl()); 
-           TServer server = new TThreadPoolServer(processor, serverTransport, 
-                   proFactory); 
-           System.out.println("Start server on port 7911..."); 
-           server.serve(); 
-       } catch (TTransportException e) { 
-           e.printStackTrace(); 
-       } 
-   } 
-}
-```
-创建客户端实现代码
-```Java
-package service.client; 
-import org.apache.thrift.TException; 
-import org.apache.thrift.protocol.TBinaryProtocol; 
-import org.apache.thrift.protocol.TProtocol; 
-import org.apache.thrift.transport.TSocket; 
-import org.apache.thrift.transport.TTransport; 
-import org.apache.thrift.transport.TTransportException; 
-import service.demo.Hello; 
- 
-public class HelloServiceClient { 
-/** 
-    * 调用 Hello 服务
-    * @param args 
-    */ 
-   public static void main(String[] args) { 
-       try { 
-           // 设置调用的服务地址为本地，端口为 7911 
-           TTransport transport = new TSocket("localhost", 7911); 
-           transport.open(); 
-           // 设置传输协议为 TBinaryProtocol 
-           TProtocol protocol = new TBinaryProtocol(transport); 
-           Hello.Client client = new Hello.Client(protocol); 
-           // 调用服务的 helloVoid 方法
-           client.helloVoid(); 
-           transport.close(); 
-       } catch (TTransportException e) { 
-           e.printStackTrace(); 
-       } catch (TException e) { 
-           e.printStackTrace(); 
-       } 
-   } 
-}
-```
-- TCompactProtocol —— 高效率的、密集的二进制编码格式进行数据传输
-构建 TCompactProtocol 协议的服务器和客户端只需上面代码中 TBinaryProtocol 协议部分即可，替换成如下代码：
-```
-TCompactProtocol.Factory proFactory = new TCompactProtocol.Factory();
-TCompactProtocol protocol = new TCompactProtocol(transport);
-```
-- TJSONProtocol —— 使用 JSON 的数据编码协议进行数据传输
-构建 TJSONProtocol 协议的服务器和客户端只需替换上面代码中 TBinaryProtocol 协议部分即可，替换成如下代码：
-```
-TJSONProtocol.Factory proFactory = new TJSONProtocol.Factory();
-TJSONProtocol protocol = new TJSONProtocol(transport);
-```
+#### 支持协议
+- TBinaryProtocol —— 二进制编码格式
+- TCompactProtocol —— 高效率的、密集的二进制编码格式
+- TJSONProtocol —— 使用 JSON 的数据编码协议
 - TSimpleJSONProtocol —— 只提供 JSON 只写的协议，适用于通过脚本语言解析
 
-## 传输层
-常用的传输层有以下几种：
-
+## TTransport
 - TSocket —— 使用阻塞式 I/O 进行传输，是最常见的模式
-使用方法如上面代码
-
-- TFramedTransport —— 使用非阻塞方式，按块的大小进行传输，类似于 Java 中的 NIO
-若使用 TFramedTransport 传输层，其服务器必须修改为非阻塞的服务类型，客户端只需替上面客代码中 TTransport 部分，代码如下
-TNonblockingServerTransport 类是构建非阻塞 socket 的抽象类，TNonblockingServerSocket 类继承 TNonblockingServerTransport
-
-
-服务端
-```
-TNonblockingServerTransport serverTransport; 
-serverTransport = new TNonblockingServerSocket(10005); 
-Hello.Processor processor = new Hello.Processor(new HelloServiceImpl()); 
-TServer server = new TNonblockingServer(processor, serverTransport); 
-System.out.println("Start server on port 10005 ..."); 
-server.serve();
-```
-客户端
-```
-TTransport transport = new TFramedTransport(new TSocket("localhost", 10005));
-```
+- TFramedTransport —— 使用非阻塞方式，按块的大小进行传输，类似 NIO。若使用 TFramedTransport 传输层，其服务器必须修改为非阻塞的服务类型。
 - TNonblockingTransport —— 使用非阻塞方式，用于构建异步客户端
 
-## 服务端类型
-常见的服务端类型有以下几种：
+## TServer
 - TSimpleServer —— 单线程服务器端使用标准的阻塞式 I/O
-```
-TServerSocket serverTransport = new TServerSocket(7911); 
-TProcessor processor = new Hello.Processor(new HelloServiceImpl()); 
-TServer server = new TSimpleServer(processor, serverTransport); 
-System.out.println("Start server on port 7911..."); 
-server.serve();
-```
 - TThreadPoolServer —— 多线程服务器端使用标准的阻塞式 I/O
 - TNonblockingServer —— 多线程服务器端使用非阻塞式 I/O
 
+## IDL
+支持跨语言环境调用的一个服务描述组件，一般都是采用文本格式来定义,自动生成辅助代码，包括客户端代码和序列化接口的代码.
+
+生成部分:
+- 接口类型(同步调用的Iface、异步调用的AsyncIface) —— 服务器和客户端共同使用。服务器端做顶层接口，编写实现类。客户端代码使用它作为生成代理的服务接口。
+- 客户端类型 —— 一个同步调用的客户端Client，一个异步调用的客户端AsyncClient.
+- Processor —— 用来支持方法调用，每个服务的实现类使用Processor来注册，保证服务器端调用接口实现时能定位到具体的实现类。
+- 方法参数的封装类，以"方法名_args"命名
+- 方法返回值的封装类，以"方法名_result"命名
+
+## 方法调用流程
+1. 自动生成的Iface接口，是远程方法的顶层接口。
+2. 自动生成的Processor类及相关父类，包括TProcessor接口，TBaseProcess抽象类。
+3. ProcessFunction抽象类，抽象了一个具体的方法调用，包含了方法名信息，调用方法的抽象过程等
+4. TNonblcokingServer，是NIO服务器的默认实现，通过Args参数来配置Processor等信息
+5. FrameBuffer类，服务器NIO的缓冲区对象，这个对象在服务器端收到全包并解码后，会调用Processor去完成实际的方法调用
+6. 服务器端的方法的具体实现类，实现Iface接口
