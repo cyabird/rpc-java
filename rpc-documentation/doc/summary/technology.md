@@ -23,6 +23,10 @@
 - **Zero Copy**
 - **Zero Allocation**
 
+## IO模型
+- **nio**
+- **aio**
+
 ### 通信
 - p2p
 - http/2
