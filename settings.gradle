@@ -1,5 +1,6 @@
 include 'rpc-demo'
 include 'rpc-registry'
+include 'rpc-core'
 
 rootProject.name = 'rpc-project'
 
