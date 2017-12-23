@@ -71,7 +71,7 @@ configure(moduleProjects) { subproject ->
 }
 
 configure(rootProject) {
-    description = "rpc-project"
+    description = "RPC Project"
 
     apply plugin: "groovy"
 

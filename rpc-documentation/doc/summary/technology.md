@@ -20,6 +20,8 @@
 - **IOCP**
 - **netty**
 - **epoll**
+- **Zero Copy**
+- **Zero Allocation**
 
 ### 通信
 - p2p
