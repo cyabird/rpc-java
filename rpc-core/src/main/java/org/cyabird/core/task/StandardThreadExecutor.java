@@ -1,5 +1,6 @@
 package org.cyabird.core.task;
 
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.ConcurrencyThrottleSupport;
@@ -67,11 +68,19 @@ public class StandardThreadExecutor {
         this(corePoolSize, maxPoolSize, DEFAULT_QUEUE_CAPACITY);
     }
 
-    public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int queueCapacity) {
-        // this(corePoolSize, maxPoolSize, queueCapacity, DEFAULT_KEEP_ALIVE_SECONDS);
+    public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds) {
+        this(corePoolSize, maxPoolSize, keepAliveSeconds, DEFAULT_QUEUE_CAPACITY);
     }
 
-    public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int queueCapacity, int keepAliveSeconds, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
+    public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds, int queueCapacity) {
+        this(corePoolSize, maxPoolSize, keepAliveSeconds, queueCapacity, new CustomizableThreadFactory());
+    }
+
+    public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds, int queueCapacity, ThreadFactory threadFactory) {
+        this(corePoolSize, maxPoolSize, keepAliveSeconds, queueCapacity, threadFactory, new ThreadPoolExecutor.AbortPolicy());
+    }
+
+    public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds, int queueCapacity, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
         threadPoolTaskExecutor.setCorePoolSize(corePoolSize);
         threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);
         threadPoolTaskExecutor.setQueueCapacity(queueCapacity);
