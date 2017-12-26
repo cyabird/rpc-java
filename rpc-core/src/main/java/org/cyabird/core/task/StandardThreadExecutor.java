@@ -121,9 +121,6 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
         /** 并发量设置 */
         private int concurrencyLimit;
 
-        /** Executor */
-        private ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
-
         /**
          * 运行前
          * <p>
@@ -139,7 +136,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
                 /**
                  * @see java.util.concurrent.ThreadPoolExecutor.AbortPolicy#rejectedExecution(Runnable, ThreadPoolExecutor)
                  */
-                threadPoolExecutor.getRejectedExecutionHandler().rejectedExecution(task, threadPoolExecutor);
+                getThreadPoolExecutor().getRejectedExecutionHandler().rejectedExecution(task, getThreadPoolExecutor());
             }
         }
 
