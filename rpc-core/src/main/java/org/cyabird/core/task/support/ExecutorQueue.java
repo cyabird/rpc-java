@@ -11,6 +11,8 @@ import java.util.concurrent.RejectedExecutionException;
  */
 public class ExecutorQueue extends LinkedTransferQueue<Runnable> {
 
+    private static final long serialVersionUID = -7367811491338117333L;
+
     private StandardThreadExecutor standardThreadExecutor;
 
     public ExecutorQueue() {
