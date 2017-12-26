@@ -52,9 +52,7 @@ public class StandardThreadExecutor {
      */
     private static final int DEFAULT_KEEP_ALIVE_SECONDS = 60;
 
-    /**
-     * 线程处理控制
-     */
+    /** 线程额外对象 */
     private final ThrottleSupport throttleSupport = new ThrottleSupport();
 
     /** 线程池对象 */
@@ -65,7 +63,7 @@ public class StandardThreadExecutor {
     }
 
     public StandardThreadExecutor(int corePoolSize, int maxPoolSize) {
-        this(corePoolSize, maxPoolSize, DEFAULT_QUEUE_CAPACITY);
+        this(corePoolSize, maxPoolSize, DEFAULT_KEEP_ALIVE_SECONDS);
     }
 
     public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds) {
@@ -92,12 +90,6 @@ public class StandardThreadExecutor {
         threadPoolTaskExecutor.initialize();
     }
 
-    public void destroy() {
-        Assert.state(threadPoolTaskExecutor != null, "线程池没有初始化");
-        throttleSupport.awaitFinish();
-        threadPoolTaskExecutor.destroy();
-    }
-
     public void execute(Runnable task) {
         Assert.state(threadPoolTaskExecutor != null, "线程池没有初始化");
         throttleSupport.beforeAccess();
@@ -110,9 +102,10 @@ public class StandardThreadExecutor {
         });
     }
 
-    public ThreadPoolExecutor getThreadPoolExecutor() throws IllegalStateException {
+    public void destroy() {
         Assert.state(threadPoolTaskExecutor != null, "线程池没有初始化");
-        return threadPoolTaskExecutor.getThreadPoolExecutor();
+        throttleSupport.awaitFinish();
+        threadPoolTaskExecutor.destroy();
     }
 
     private static class ThrottleSupport extends ConcurrencyThrottleSupport {
