@@ -85,7 +85,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
 
     @Override
     public void execute(Runnable task) {
-        throttleSupport.before(task);
+        throttleSupport.beforeAccess(task);
         super.execute(() -> {
             try {
                 task.run();
@@ -95,7 +95,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
                     super.getThreadPoolExecutor().getRejectedExecutionHandler().rejectedExecution(task, super.getThreadPoolExecutor());
                 }
             } finally {
-                throttleSupport.after();
+                throttleSupport.afterAccess();
             }
         });
     }
@@ -126,12 +126,12 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
          * <p>
          * 默认队列没有长度限制，因此这里进行控制
          *
-         * @see ThrottleSupport#beforeAccess()
+         * @see ThrottleSupport#beforeAccess(Runnable)
          */
-        protected void before(Runnable task) {
-            int count = super.beforeAccess();
+        @Override
+        protected void beforeProcess(Runnable task, int concurrencyCount) {
             // 因为队列没有长度，所以在这里进行并发控制
-            if (count > concurrencyLimit) {
+            if (concurrencyCount > concurrencyLimit) {
                 getConcurrencyCount().decrementAndGet();
                 /**
                  * @see java.util.concurrent.ThreadPoolExecutor.AbortPolicy#rejectedExecution(Runnable, ThreadPoolExecutor)
@@ -140,13 +140,9 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
             }
         }
 
-        /**
-         * 运行后
-         *
-         * @see ThrottleSupport#afterAccess()
-         */
-        protected void after() {
-            super.afterAccess();
+        @Override
+        protected void afterProcess(int concurrencyCount) {
+
         }
 
         /**
