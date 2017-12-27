@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 /**
  * StandardThreadExecutor execute执行策略：	优先扩充线程到maxThread，再offer到queue，如果满了就reject
  * <p>
- * 适应场景：  比较适合于业务处理需要远程资源的场景
+ * 适应场景：  适用于低于CPU运行效率的业务
  */
 public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
 
@@ -24,7 +24,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
      *
      * @see ThreadPoolTaskExecutor#corePoolSize
      */
-    private static final int DEFAULT_CORE_POOL_SIZE = 4;
+    private static final int DEFAULT_CORE_POOL_SIZE = 2;
 
     /**
      * 最大线程池大小
@@ -34,14 +34,14 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
      *
      * @see ThreadPoolTaskExecutor#maxPoolSize
      */
-    private static final int DEFAULT_MAX_POOL_SIZE = 4;
+    private static final int DEFAULT_MAX_POOL_SIZE = 2;
 
     /**
      * 阻塞任务队列容量(默认为int的最大值)
      *
      * @see ThreadPoolTaskExecutor#queueCapacity
      */
-    private static final int DEFAULT_QUEUE_CAPACITY = 15;
+    private static final int DEFAULT_QUEUE_CAPACITY = 1;
 
     /**
      * 线程池中超过核心线程数目的空闲线程最大存活时间；
