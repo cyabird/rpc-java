@@ -11,6 +11,8 @@ import java.util.concurrent.*;
  * StandardThreadExecutor execute执行策略：	优先扩充线程到maxThread，再offer到queue，如果满了就reject
  * <p>
  * 适应场景：  适用于低于CPU运行效率的业务
+ * <p>
+ * 建议线程数目 = （（线程等待时间+线程处理时间）/线程处理时间 ）* CPU数目
  */
 public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
 
