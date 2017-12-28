@@ -21,20 +21,24 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
      * 即使此时线程池中存在空闲线程。
      * <p>
      * 当线程池达到corePoolSize时，新提交任务将被放入任务队列中.
+     * <p>
+     * 默认CPU密集型应用数量
      *
      * @see ThreadPoolTaskExecutor#corePoolSize
      */
-    private static final int DEFAULT_CORE_POOL_SIZE = 2;
+    private static final int DEFAULT_CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
 
     /**
      * 最大线程池大小
      * <p>
      * 如果任务队列已满,将创建最大线程池的数量执行任务,如果超出最大线程池的大小,
      * 将提交给RejectedExecutionHandler处理
+     * <p>
+     * 默认IO密集型应用数量
      *
      * @see ThreadPoolTaskExecutor#maxPoolSize
      */
-    private static final int DEFAULT_MAX_POOL_SIZE = 2;
+    private static final int DEFAULT_MAX_POOL_SIZE = 2 * Runtime.getRuntime().availableProcessors() + 1;
 
     /**
      * 阻塞任务队列容量(默认为int的最大值)
@@ -74,7 +78,8 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
 
     public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds, int queueCapacity, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
         super.setCorePoolSize(corePoolSize);
-        super.setMaxPoolSize(maxPoolSize);
+        // 最大线程数必须比核心数大
+        super.setMaxPoolSize(maxPoolSize > corePoolSize ? maxPoolSize : corePoolSize);
         super.setKeepAliveSeconds(keepAliveSeconds);
         super.setThreadFactory(threadFactory);
         super.setRejectedExecutionHandler(rejectedExecutionHandler);
