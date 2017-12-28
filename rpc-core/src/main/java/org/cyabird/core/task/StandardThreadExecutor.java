@@ -16,6 +16,9 @@ import java.util.concurrent.*;
  */
 public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
 
+    /** 核心数量 */
+    public static final int CORE_SIZE = Runtime.getRuntime().availableProcessors();
+
     /**
      * 核心线程池大小
      * <p>
@@ -28,7 +31,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
      *
      * @see ThreadPoolTaskExecutor#corePoolSize
      */
-    private static final int DEFAULT_CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
+    private static final int DEFAULT_CORE_POOL_SIZE = CORE_SIZE + 1;
 
     /**
      * 最大线程池大小
@@ -40,7 +43,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
      *
      * @see ThreadPoolTaskExecutor#maxPoolSize
      */
-    private static final int DEFAULT_MAX_POOL_SIZE = 2 * Runtime.getRuntime().availableProcessors() + 1;
+    private static final int DEFAULT_MAX_POOL_SIZE = 2 * CORE_SIZE + 1;
 
     /**
      * 阻塞任务队列容量(默认为int的最大值)
