@@ -17,7 +17,7 @@ public abstract class ThrottleSupport {
      * @param task 运行任务
      */
     public void beforeAccess(Runnable task) {
-        beforeProcess(task, concurrencyCount.incrementAndGet());
+        runBefore(task, concurrencyCount.incrementAndGet());
     }
 
     /**
@@ -26,13 +26,13 @@ public abstract class ThrottleSupport {
      * @param task             当前任务
      * @param concurrencyCount 当前任务数量
      */
-    protected abstract void beforeProcess(Runnable task, int concurrencyCount);
+    protected abstract void runBefore(Runnable task, int concurrencyCount);
 
     /**
      * 运行后
      */
     public void afterAccess() {
-        afterProcess(this.concurrencyCount.decrementAndGet());
+        runAfter(this.concurrencyCount.decrementAndGet());
     }
 
     /**
@@ -40,7 +40,9 @@ public abstract class ThrottleSupport {
      *
      * @param concurrencyCount 当前任务数量
      */
-    protected abstract void afterProcess(int concurrencyCount);
+    protected void runAfter(int concurrencyCount) {
+
+    }
 
     /**
      * 返回当前任务数量

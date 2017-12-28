@@ -129,7 +129,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
          * @see ThrottleSupport#beforeAccess(Runnable)
          */
         @Override
-        protected void beforeProcess(Runnable task, int concurrencyCount) {
+        protected void runBefore(Runnable task, int concurrencyCount) {
             // 因为队列没有长度，所以在这里进行并发控制
             if (concurrencyCount > concurrencyLimit) {
                 getConcurrencyCount().decrementAndGet();
@@ -138,11 +138,6 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
                  */
                 getThreadPoolExecutor().getRejectedExecutionHandler().rejectedExecution(task, getThreadPoolExecutor());
             }
-        }
-
-        @Override
-        protected void afterProcess(int concurrencyCount) {
-
         }
 
         /**
