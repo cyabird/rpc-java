@@ -43,7 +43,7 @@ public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
         if (now - lastPrintTime < INTERVAL_TIME) {
             return;
         }
-        // 获取执行许可
+        // 尝试获取执行许可
         if (!guard.tryAcquire()) {
             // 获取失败则不执行
             return;
