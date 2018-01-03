@@ -1,5 +1,6 @@
 package org.cyabird.core.task;
 
+import org.cyabird.core.task.support.AbortPolicyWithReport;
 import org.cyabird.core.task.support.ExecutorQueue;
 import org.cyabird.core.task.support.ThrottleSupport;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
@@ -78,7 +79,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
     }
 
     public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds, int queueCapacity, ThreadFactory threadFactory) {
-        this(corePoolSize, maxPoolSize, keepAliveSeconds, queueCapacity, threadFactory, new ThreadPoolExecutor.AbortPolicy());
+        this(corePoolSize, maxPoolSize, keepAliveSeconds, queueCapacity, threadFactory, new AbortPolicyWithReport());
     }
 
     public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds, int queueCapacity, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
