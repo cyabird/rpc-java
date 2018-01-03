@@ -2,7 +2,7 @@ package org.cyabird.core;
 
 /**
  * @create: 2018-01-03
- * @description:
+ * @description: 服务请求地址
  */
 public class URL {
 

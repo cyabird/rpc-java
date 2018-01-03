@@ -1,35 +1,68 @@
 package org.cyabird.core.task.support;
 
-import org.cyabird.core.URL;
+import org.cyabird.core.Constants;
 
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @create: 2018-01-03
- * @description:
+ * @description: 线程池满载拒绝策略
  */
 public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
 
-    private final String threadName;
 
-    private final URL url;
+    /** 最后打印时间 */
+    private static volatile long lastPrintTime = 0;
 
-    private volatile transient String ip;
+    /** 处理间隔时间 */
+    private final static long INTERVAL_TIME = 10 * 60 * 1000;
 
-    public AbortPolicyWithReport(String threadName, URL url) {
-        this.threadName = threadName;
-        this.url = url;
-    }
+    /** 只能同时处理一次 */
+    private static Semaphore guard = new Semaphore(1);
 
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
         String msg = String.format("线程池资源耗尽!" +
-                        " Thread Name: %s, Pool Size: %d (active: %d, core: %d, max: %d, largest: %d), Task: %d (completed: %d)," +
-                        " Executor status:(isShutdown:%s, isTerminated:%s, isTerminating:%s), in %s://%s:%d!",
-                threadName, e.getPoolSize(), e.getActiveCount(), e.getCorePoolSize(), e.getMaximumPoolSize(), e.getLargestPoolSize(),
-                e.getTaskCount(), e.getCompletedTaskCount(), e.isShutdown(), e.isTerminated(), e.isTerminating(),
-                url.getProtocol(), url.getIp(), url.getPort());
+                        " Pool Size: %d (active: %d, core: %d, max: %d, largest: %d), Task: %d (completed: %d)," +
+                        " Executor status:(isShutdown:%s, isTerminated:%s, isTerminating:%s)!",
+                e.getPoolSize(), e.getActiveCount(), e.getCorePoolSize(), e.getMaximumPoolSize(), e.getLargestPoolSize(),
+                e.getTaskCount(), e.getCompletedTaskCount(), e.isShutdown(), e.isTerminated(), e.isTerminating());
+        dumpJStack();
         throw new RejectedExecutionException(msg);
+    }
+
+    private void dumpJStack() {
+        long now = System.currentTimeMillis();
+
+        if (now - lastPrintTime < INTERVAL_TIME) {
+            return;
+        }
+        // 获取执行许可
+        if (!guard.tryAcquire()) {
+            // 获取失败则不执行
+            return;
+        }
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            SimpleDateFormat sdf;
+            // 获取所属系统
+            String OS = System.getProperty("os.name").toLowerCase();
+
+            // window 系统的文件不支持 ":"
+            if (OS.contains(Constants.WINDOWS_SYS_PREFIX)) {
+                sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+            } else {
+                sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+            }
+
+            String dateStr = sdf.format(new Date());
+            FileOutputStream jstackStream = null;
+        });
     }
 }

@@ -84,7 +84,7 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
 
     public StandardThreadExecutor(int corePoolSize, int maxPoolSize, int keepAliveSeconds, int queueCapacity, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
         super.setCorePoolSize(corePoolSize);
-        // 最大线程数必须比核心数大
+        // 最大线程数不能小于核心线程数
         super.setMaxPoolSize(maxPoolSize > corePoolSize ? maxPoolSize : corePoolSize);
         super.setKeepAliveSeconds(keepAliveSeconds);
         super.setThreadFactory(threadFactory);
