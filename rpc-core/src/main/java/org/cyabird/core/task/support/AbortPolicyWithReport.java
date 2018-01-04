@@ -1,8 +1,12 @@
 package org.cyabird.core.task.support;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.cyabird.core.Constants;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Executors;
@@ -16,6 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
 
+    protected final Log log = LogFactory.getLog(getClass());
 
     /** 最后打印时间 */
     private static volatile long lastPrintTime = 0;
@@ -33,6 +38,9 @@ public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
                         " Executor status:(isShutdown:%s, isTerminated:%s, isTerminating:%s)!",
                 e.getPoolSize(), e.getActiveCount(), e.getCorePoolSize(), e.getMaximumPoolSize(), e.getLargestPoolSize(),
                 e.getTaskCount(), e.getCompletedTaskCount(), e.isShutdown(), e.isTerminated(), e.isTerminating());
+        if (log.isWarnEnabled()) {
+            log.warn(msg);
+        }
         dumpJStack();
         throw new RejectedExecutionException(msg);
     }
@@ -51,6 +59,10 @@ public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             SimpleDateFormat sdf;
+            // 用户路径
+            // todo 自定义保存
+            String dumpPath = System.getProperty("user.home").toLowerCase();
+
             // 获取所属系统
             String OS = System.getProperty("os.name").toLowerCase();
 
@@ -63,6 +75,12 @@ public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
 
             String dateStr = sdf.format(new Date());
             FileOutputStream jstackStream = null;
+            try {
+                jstackStream = new FileOutputStream(new File(dumpPath, "JStack.log" + "." + dateStr));
+            } catch (IOException e) {
+
+            }
+
         });
     }
 }
