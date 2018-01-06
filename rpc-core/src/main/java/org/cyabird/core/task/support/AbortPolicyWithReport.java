@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
 
-    protected final Log log = LogFactory.getLog(getClass());
+    protected static final Log log = LogFactory.getLog(AbortPolicyWithReport.class);
 
     /** 最后打印时间 */
     private static volatile long lastPrintTime = 0;
