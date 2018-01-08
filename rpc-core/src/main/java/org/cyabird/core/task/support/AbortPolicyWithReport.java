@@ -3,6 +3,7 @@ package org.cyabird.core.task.support;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cyabird.core.Constants;
+import org.cyabird.util.JvmUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +21,9 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
 
+    /**
+     * 日志
+     */
     protected static final Log log = LogFactory.getLog(AbortPolicyWithReport.class);
 
     /** 最后打印时间 */
@@ -45,7 +49,11 @@ public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
         throw new RejectedExecutionException(msg);
     }
 
+    /**
+     * 日志
+     */
     private void dumpJStack() {
+
         long now = System.currentTimeMillis();
 
         if (now - lastPrintTime < INTERVAL_TIME) {
@@ -77,10 +85,20 @@ public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
             FileOutputStream jstackStream = null;
             try {
                 jstackStream = new FileOutputStream(new File(dumpPath, "JStack.log" + "." + dateStr));
-            } catch (IOException e) {
-
+                JvmUtils.jstack(jstackStream);
+            } catch (Throwable t) {
+                log.error("dump jstack error", t);
+            } finally {
+                // 释放许可
+                guard.release();
+                if (jstackStream != null) {
+                    try {
+                        jstackStream.flush();
+                        jstackStream.close();
+                    } catch (IOException e) {
+                    }
+                }
             }
-
         });
     }
 }
