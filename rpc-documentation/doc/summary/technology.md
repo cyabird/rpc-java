@@ -16,6 +16,9 @@
 
 性能: kryo > protobuf
 
+## 处理模式
+- **reactive**
+
 ### IO处理
 - **IOCP**
 - **netty**
