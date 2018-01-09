@@ -40,12 +40,25 @@ configure(allprojects) { project ->
 
 // 模块项目
 configure(moduleProjects) { subproject ->
+
+    apply plugin: "io.spring.dependency-management"
+
     // 属性配置
     ext {
         junitVersion = "4.12"
         mockitoVersion = "2.12.0"
         hamcrestVersion = "1.3"
         springVersion = "5.0.1.RELEASE"
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework:spring-framework-bom:${springVersion}"
+        }
+        resolutionStrategy {
+            cacheChangingModulesFor 0, 'seconds'
+        }
+        applyMavenExclusions = false
     }
 
     [compileJava, compileTestJava].each() {
