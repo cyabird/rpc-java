@@ -8,7 +8,7 @@ import java.lang.management.*;
  * @create: 2018-01-03
  * @description:
  */
-public class JvmUtils {
+public abstract class JvmUtils {
     public static void jstack(OutputStream stream) throws IOException {
         // 虚拟机线程系统管理
         ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
