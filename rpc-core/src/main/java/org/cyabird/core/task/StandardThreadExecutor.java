@@ -112,6 +112,23 @@ public class StandardThreadExecutor extends ThreadPoolTaskExecutor {
     }
 
     @Override
+    public <T> Future<T> submit(Callable<T> task) {
+        FutureTask<T> futureTask = new FutureTask<>(task);
+        throttleSupport.beforeAccess(futureTask);
+        try {
+            super.execute(futureTask);
+        } catch (RejectedExecutionException rx) {
+            // 尝试放入队列，失败则直接使用失败策略
+            if (!((ExecutorQueue) getThreadPoolExecutor().getQueue()).force(futureTask)) {
+                getThreadPoolExecutor().getRejectedExecutionHandler().rejectedExecution(futureTask, getThreadPoolExecutor());
+            }
+        } finally {
+            throttleSupport.afterAccess();
+        }
+        return futureTask;
+    }
+
+    @Override
     protected BlockingQueue<Runnable> createQueue(int queueCapacity) {
         ExecutorQueue executorQueue = new ExecutorQueue();
         executorQueue.setStandardThreadExecutor(this);
