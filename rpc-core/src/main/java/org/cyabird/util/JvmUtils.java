@@ -15,8 +15,8 @@ public abstract class JvmUtils {
         /**
          * 返回所有活动线程的线程信息，并带有堆栈跟踪和同步信息。
          *
-         * lockedMonitors: synchronized(Object obj)
-         * lockedSynchronizers: 常指 ReentrantLock 和 ReentrantReadWriteLock 锁
+         * @param lockedMonitors: synchronized(Object obj)
+         * @param lockedSynchronizers: 常指 ReentrantLock 和 ReentrantReadWriteLock 锁
          */
         ThreadInfo[] threadInfos = threadMxBean.dumpAllThreads(true, true);
         for (ThreadInfo threadInfo : threadInfos) {
