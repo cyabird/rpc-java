@@ -10,16 +10,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 /**
  * @create: 2018-01-03
  * @description: 线程池满载拒绝策略
  */
-public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
+public class AbortPolicyWithReport implements RejectedExecutionHandler {
 
     /**
      * 日志
