@@ -18,6 +18,7 @@
 
 ## 任务处理模式
 - **reactive**
+- **Actor**
 
 ### IO处理
 - **Zero Copy**
