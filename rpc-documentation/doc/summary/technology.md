@@ -16,15 +16,18 @@
 
 性能: kryo > protobuf
 
-## 处理模式
+## 任务处理模式
 - **reactive**
 
 ### IO处理
-- **IOCP**
-- **netty**
-- **epoll**
 - **Zero Copy**
 - **Zero Allocation**
+- **Reactor(Linux epoll)**
+- **Proactor(Windows IO completion port)**
+
+### 处理框架
+- **[vertx][1]**
+- **[netty][2]**
 
 ## IO模型
 - **nio**
@@ -54,3 +57,6 @@
 - spring配置
 
 ## 本地存根
+
+[1]:vertx.io
+[2]:http://netty.io/

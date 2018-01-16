@@ -18,9 +18,7 @@ import java.util.concurrent.*;
  */
 public class AbortPolicyWithReport implements RejectedExecutionHandler {
 
-    /**
-     * 日志
-     */
+    /** 日志 */
     protected static final Log log = LogFactory.getLog(AbortPolicyWithReport.class);
 
     /** 最后打印时间 */
