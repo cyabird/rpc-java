@@ -26,8 +26,8 @@ public class ExecutorQueue extends LinkedTransferQueue<Runnable> {
     /**
      * 将任务放入队列
      *
-     * @param task
-     * @return
+     * @param task {@code Runnable}
+     * @return {@code boolean} 是否放入成功
      */
     public boolean force(Runnable task) {
         if (standardThreadExecutor.getThreadPoolExecutor().isShutdown()) {
@@ -41,8 +41,8 @@ public class ExecutorQueue extends LinkedTransferQueue<Runnable> {
      * <p>
      * 默认IO密集型处理，本身就是RPC项目，对IO要求较高
      *
-     * @param task
-     * @return
+     * @param task {@code Runnable} 任务
+     * @return {@code boolean} 是否放入成功
      */
     @Override
     public boolean offer(Runnable task) {

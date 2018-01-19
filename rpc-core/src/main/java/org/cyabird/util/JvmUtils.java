@@ -5,8 +5,7 @@ import java.io.OutputStream;
 import java.lang.management.*;
 
 /**
- * @create: 2018-01-03
- * @description:
+ * JVM运行时跟踪工具
  */
 public abstract class JvmUtils {
     public static void jstack(OutputStream stream) throws IOException {
@@ -27,8 +26,8 @@ public abstract class JvmUtils {
     /**
      * 返回线程信息
      *
-     * @param threadInfo
-     * @return
+     * @param threadInfo {@code ThreadInfo}
+     * @return 日志信息
      */
     private static String getThreadDumpString(ThreadInfo threadInfo) {
         StringBuilder sb = new StringBuilder("\"" + threadInfo.getThreadName() + "\"" +

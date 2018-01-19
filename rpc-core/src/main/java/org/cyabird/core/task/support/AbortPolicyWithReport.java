@@ -13,13 +13,12 @@ import java.util.Date;
 import java.util.concurrent.*;
 
 /**
- * @create: 2018-01-03
- * @description: 线程池满载拒绝策略
+ * 线程池满载拒绝策略
  */
 public class AbortPolicyWithReport implements RejectedExecutionHandler {
 
     /** 日志 */
-    protected static final Log log = LogFactory.getLog(AbortPolicyWithReport.class);
+    private static final Log log = LogFactory.getLog(AbortPolicyWithReport.class);
 
     /** 最后打印时间 */
     private static volatile long lastPrintTime = 0;
@@ -51,7 +50,7 @@ public class AbortPolicyWithReport implements RejectedExecutionHandler {
 
         long now = System.currentTimeMillis();
 
-        if (now - lastPrintTime < INTERVAL_TIME) {
+        if ((now - lastPrintTime) < INTERVAL_TIME) {
             return;
         }
         // 尝试获取执行许可
@@ -67,10 +66,10 @@ public class AbortPolicyWithReport implements RejectedExecutionHandler {
             String dumpPath = System.getProperty("user.home").toLowerCase();
 
             // 获取所属系统
-            String OS = System.getProperty("os.name").toLowerCase();
+            String os = System.getProperty("os.name").toLowerCase();
 
             // window 系统的文件不支持 ":"
-            if (OS.contains(Constants.WINDOWS_SYS_PREFIX)) {
+            if (os.contains(Constants.WINDOWS_SYS_PREFIX)) {
                 sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
             } else {
                 sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -91,6 +90,7 @@ public class AbortPolicyWithReport implements RejectedExecutionHandler {
                         jstackStream.flush();
                         jstackStream.close();
                     } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }
