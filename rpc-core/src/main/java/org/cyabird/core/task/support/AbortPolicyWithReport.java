@@ -7,7 +7,6 @@ import org.cyabird.util.JvmUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.*;
@@ -76,23 +75,13 @@ public class AbortPolicyWithReport implements RejectedExecutionHandler {
             }
 
             String dateStr = sdf.format(new Date());
-            FileOutputStream jstackStream = null;
-            try {
-                jstackStream = new FileOutputStream(new File(dumpPath, "JStack.log" + "." + dateStr));
+            try (FileOutputStream jstackStream = new FileOutputStream(new File(dumpPath, "JStack.log" + "." + dateStr))) {
                 JvmUtils.jstack(jstackStream);
             } catch (Throwable t) {
                 log.error("dump jstack error", t);
             } finally {
                 // 释放许可
                 guard.release();
-                if (jstackStream != null) {
-                    try {
-                        jstackStream.flush();
-                        jstackStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         });
     }
