@@ -1,4 +1,4 @@
-package org.cyabird.extension;
+package org.cyabird.core.extension;
 
 import org.cyabird.util.Holder;
 
@@ -30,8 +30,9 @@ public class ExtensionLoader<T> {
      * @see #withExtensionAnnotation(Class) 判断该方法是否包含 SPI 注解
      */
     public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
-        if (type == null)
+        if (type == null) {
             throw new IllegalArgumentException("Extension type == null");
+        }
         if (!type.isInterface()) {
             throw new IllegalArgumentException("Extension type(" + type + ") is not interface!");
         }

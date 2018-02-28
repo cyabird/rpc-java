@@ -1,4 +1,4 @@
-package org.cyabird.extension;
+package org.cyabird.core.extension;
 
 @SPI
 public interface ExtensionFactory {

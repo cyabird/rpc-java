@@ -1,5 +1,6 @@
-package org.cyabird.extension;
+package org.cyabird.core.extension;
 
+import org.cyabird.core.extension.ExtensionLoader;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
