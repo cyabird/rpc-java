@@ -86,13 +86,8 @@ configure(moduleProjects) { subproject ->
 }
 
 configure(rootProject) {
+
     description = "RPC Project"
 
-    apply plugin: "groovy"
-
     configurations.archives.artifacts.clear()
-
-    dependencies{
-        compile(project(":rpc-registry"))
-    }
 }
