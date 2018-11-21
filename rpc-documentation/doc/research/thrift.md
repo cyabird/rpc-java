@@ -6,7 +6,7 @@
 
 ## thrift架构
 
-![](../../image/thrift-framework.jpg)
+![](image/thrift-framework.jpg)
 
 | 组件     |描述                           |
 |----------|-------------------------------|

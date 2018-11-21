@@ -27,7 +27,7 @@
 - **Proactor(Windows IO completion port)**
 
 ### 处理框架
-- **[vertx][1]**
+- **[vert.x][1]**
 - **[netty][2]**
 
 ## IO模型
