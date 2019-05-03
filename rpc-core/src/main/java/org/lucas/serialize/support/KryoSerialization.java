@@ -1,4 +1,4 @@
-package org.cyabird.serialize.support;
+package org.lucas.serialize.support;
 
 /**
  * @create: 2018-01-24

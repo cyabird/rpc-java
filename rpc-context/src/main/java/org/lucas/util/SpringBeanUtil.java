@@ -1,4 +1,4 @@
-package org.cyabird.util;
+package org.lucas.util;
 
 import org.springframework.beans.factory.BeanFactory;
 
